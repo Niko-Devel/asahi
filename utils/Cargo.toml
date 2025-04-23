@@ -1,0 +1,18 @@
+[package]
+name = "asahi_utils"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+asahi_internal = { workspace = true }
+sqlx = { version = "0.8.5", optional = true, features = ["runtime-tokio"] }
+lazy_static = { workspace = true }
+regex = { workspace = true }
+num-traits = "0.2.19"
+num-bigint = "0.4.6"
+
+[features]
+sqlx-pg = ["dep:sqlx", "sqlx/postgres"]
+sqlx-sqlite = ["dep:sqlx", "sqlx/sqlite"]

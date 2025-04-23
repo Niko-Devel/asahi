@@ -1,0 +1,13 @@
+[package]
+name = "asahi_coordinator"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+asahi_internal = { workspace = true }
+async-trait = { workspace = true }
+tokio = { workspace = true }
+
+[features]

@@ -1,0 +1,40 @@
+[package]
+name = "asahi"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [
+  "http",
+  "macros",
+  "utils",
+  "coordinator",
+  "internal"
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Nwerosama"]
+repository = "https://github.com/Niko-Devel/asahi"
+
+[workspace.dependencies]
+async-trait = "0.1.38"
+asahi_internal = { path = "internal" }
+lazy_static = "1.5.0"
+regex = "1.11.1"
+thiserror = "2.0.12"
+tokio = { version = "1.44.2", features = ["rt-multi-thread", "time", "net"] }
+
+[dependencies]
+asahi_internal = { workspace = true }
+asahi_http = { path = "http" }
+asahi_utils = { path = "utils" }
+asahi_macros = { path = "macros" }
+asahi_coordinator = { path = "coordinator" }
+
+[features]
+default = []
+config = []
+http = []
+utils = []

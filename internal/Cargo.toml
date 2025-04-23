@@ -1,0 +1,13 @@
+[package]
+name = "asahi_internal"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+thiserror = { workspace = true }
+
+[features]
+default = []
+config = []
