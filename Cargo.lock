@@ -34,7 +34,7 @@ checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 
 [[package]]
 name = "asahi"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asahi_coordinator",
  "asahi_http",
@@ -45,7 +45,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_coordinator"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asahi_internal",
  "async-trait",
@@ -54,7 +54,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_http"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asahi_internal",
  "http-body-util",
@@ -65,21 +65,18 @@ dependencies = [
 
 [[package]]
 name = "asahi_internal"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "thiserror",
 ]
 
 [[package]]
 name = "asahi_macros"
-version = "0.1.0"
-dependencies = [
- "asahi_internal",
-]
+version = "0.1.1"
 
 [[package]]
 name = "asahi_utils"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "asahi_internal",
  "lazy_static",

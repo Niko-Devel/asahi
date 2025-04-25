@@ -26,6 +26,24 @@ pub fn get_os_info() -> String {
   format!("{name} {version}")
 }
 
+pub fn get_kernel_info() -> String {
+  let path = Path::new("/proc/version");
+  let mut kern_info = "Unsupported kernel".to_string();
+
+  if let Ok(file) = File::open(path) {
+    let mut reader = BufReader::new(file);
+    let mut content = String::new();
+
+    if reader.read_line(&mut content).is_ok() {
+      if let Some(version) = content.split_whitespace().nth(2) {
+        kern_info = version.to_string();
+      }
+    }
+  }
+
+  kern_info
+}
+
 pub fn format_bytes(bytes: u64) -> String {
   let units = ["B", "KB", "MB", "GB"];
   let mut bytes = bytes as f64;

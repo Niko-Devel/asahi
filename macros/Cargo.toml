@@ -6,7 +6,6 @@ authors.workspace = true
 repository.workspace = true
 
 [dependencies]
-asahi_internal = { workspace = true }
 
 [lib]
 proc-macro = true
