@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 repository.workspace = true
+license-file.workspace = true
+description = "Internal core crate for Asahi framework"
 
 [dependencies]
 thiserror = { workspace = true }
