@@ -19,7 +19,7 @@ pub fn plugin(
 
   let wrapper = format!(
     "{input}
-    
+
     pub struct {struct_name};
 
     impl ::asahi::AsahiPlugin for {struct_name} {{

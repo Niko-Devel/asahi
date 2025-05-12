@@ -35,14 +35,22 @@ pub enum AsahiError {
   Unknown
 }
 
-impl From<sqlx::Error> for AsahiError {
-  fn from(error: sqlx::Error) -> Self { AsahiError::Database(error.to_string()) }
+macro_rules! impl_from_error {
+  ($($source_type:ty => $destination_variant:ident),* $(,)?) => {
+    $(
+      impl From<$source_type> for AsahiError {
+        fn from(error: $source_type) -> Self {
+          AsahiError::$destination_variant(error.to_string())
+        }
+      }
+    )*
+  };
 }
 
-impl From<serde_json::Error> for AsahiError {
-  fn from(error: serde_json::Error) -> Self { AsahiError::Parse(error.to_string()) }
-}
-
-impl From<Box<dyn std::error::Error + Send + Sync>> for AsahiError {
-  fn from(error: Box<dyn std::error::Error + Send + Sync>) -> Self { AsahiError::External(error.to_string()) }
-}
+impl_from_error!(
+  Box<dyn std::error::Error + Send + Sync> => External,
+  std::time::SystemTimeError => External,
+  serde_json::Error => Parse,
+  sqlx::Error => Database,
+  bb8_redis::redis::RedisError => Database
+);

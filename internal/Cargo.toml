@@ -8,6 +8,7 @@ license-file.workspace = true
 description = "Internal core crate for Asahi framework"
 
 [dependencies]
+bb8-redis = "0.23.0"
 thiserror = { workspace = true }
 sqlx = "0.8.5"
 serde_json = { workspace = true }

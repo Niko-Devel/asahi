@@ -3,7 +3,6 @@ use {
     AsahiError,
     AsahiResult
   },
-  async_trait::async_trait,
   std::{
     sync::Arc,
     time::Duration
@@ -11,10 +10,14 @@ use {
   tokio::time::interval
 };
 
+pub use async_trait::async_trait;
+
 #[async_trait]
 pub trait AsahiCoordinator<C: Send + Sync>: Send + Sync {
   fn name(&self) -> &'static str;
+  /// Loop every X seconds
   fn interval(&self) -> u64;
+  /// Asynchronous code inside the loop
   async fn main_loop(
     &self,
     ctx: Arc<C>
