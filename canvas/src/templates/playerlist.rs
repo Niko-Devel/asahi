@@ -76,30 +76,6 @@ pub fn playerlist(
   let mut canvas = Canvas::new(width, height);
   canvas.set_bg_color(style.bg_color);
 
-  if players.is_empty() {
-    // header
-    canvas.add_layer(Layer::Rect {
-      size:     (width, header_height),
-      position: (0, 0),
-      color:    style.header_bar_color
-    });
-
-    // header text
-    let content = "Nobody playing";
-    let fsize = style.font_size + 8.0;
-    let text_width = assume_text_width(content, fsize, &style.font);
-    let text_x = (width / 2).saturating_sub(text_width / 2);
-    canvas.add_layer(Layer::Text {
-      size:     fsize,
-      position: (text_x, 7),
-      color:    style.text_color,
-      content:  content.to_string(),
-      font:     style.font.clone()
-    });
-
-    return canvas
-  }
-
   // header
   canvas.add_layer(Layer::Rect {
     size:     (width, header_height),
@@ -108,7 +84,7 @@ pub fn playerlist(
   });
 
   // header text
-  let content = "Players online";
+  let content = if players.is_empty() { "Nobody's playing" } else { "Players online" };
   let fsize = style.font_size + 8.0;
   let text_width = assume_text_width(content, fsize, &style.font);
   let text_x = (width / 2).saturating_sub(text_width / 2);
@@ -120,28 +96,30 @@ pub fn playerlist(
     font:     style.font.clone()
   });
 
-  for (i, p) in players.iter().enumerate() {
-    let y = header_height + i as u32 * style.row_height;
+  if !players.is_empty() {
+    for (i, p) in players.iter().enumerate() {
+      let y = header_height + i as u32 * style.row_height;
 
-    let alt_color = if i % 2 == 0 { Rgba([10, 10, 10, 255]) } else { Rgba([20, 20, 20, 255]) };
+      let alt_color = if i % 2 == 0 { Rgba([10, 10, 10, 255]) } else { Rgba([20, 20, 20, 255]) };
 
-    // alternating color thing
-    canvas.add_layer(Layer::Rect {
-      size:     (width, style.row_height),
-      position: (0, y),
-      color:    alt_color
-    });
+      // alternating color thing
+      canvas.add_layer(Layer::Rect {
+        size:     (width, style.row_height),
+        position: (0, y),
+        color:    alt_color
+      });
 
-    let admin_color = if p.is_admin { style.admin_color } else { style.text_color };
+      let admin_color = if p.is_admin { style.admin_color } else { style.text_color };
 
-    // player data field
-    canvas.add_layer(Layer::Text {
-      size:     style.font_size,
-      position: (50, y + 5),
-      color:    admin_color,
-      content:  format!("{}{} - {}", p.name, p.emoji, p.uptime),
-      font:     style.font.clone()
-    })
+      // player data field
+      canvas.add_layer(Layer::Text {
+        size:     style.font_size,
+        position: (50, y + 5),
+        color:    admin_color,
+        content:  format!("{}{} - {}", p.name, p.emoji, p.uptime),
+        font:     style.font.clone()
+      })
+    }
   }
 
   if display_graph {
