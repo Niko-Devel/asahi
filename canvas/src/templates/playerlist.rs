@@ -45,7 +45,7 @@ impl Default for Style {
       graph_color:      Rgba([201, 55, 93, 255]),
       text_color:       Rgba([255, 255, 255, 255]),
       admin_color:      Rgba([247, 67, 74, 255]),
-      font:             FontArc::try_from_slice(include_bytes!("../../fonts/DejaVuSans.ttf")).unwrap(),
+      font:             FontArc::try_from_slice(include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/fonts/DejaVuSans.ttf"))).unwrap(),
       font_size:        24.0,
       row_height:       36,
       padding:          5

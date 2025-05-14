@@ -6,9 +6,6 @@ authors.workspace = true
 repository.workspace = true
 license-file.workspace = true
 description.workspace = true
-exclude = [
-  "fonts/"
-]
 
 [dependencies]
 ab_glyph = "0.2.29"
