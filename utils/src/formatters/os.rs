@@ -34,10 +34,10 @@ pub fn get_kernel_info() -> String {
     let mut reader = BufReader::new(file);
     let mut content = String::new();
 
-    if reader.read_line(&mut content).is_ok() {
-      if let Some(version) = content.split_whitespace().nth(2) {
-        kern_info = version.to_string();
-      }
+    if reader.read_line(&mut content).is_ok()
+      && let Some(version) = content.split_whitespace().nth(2)
+    {
+      kern_info = version.to_string();
     }
   }
 

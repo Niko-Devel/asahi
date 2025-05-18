@@ -40,7 +40,7 @@ pub enum Layer {
     position: (u32, u32),
     color:    Rgba<u8>,
     content:  String,
-    font:     FontArc
+    font:     Font
   },
   Image {
     scale:    f32,
@@ -76,7 +76,8 @@ impl Layer {
         font
       } => {
         let scale = PxScale::from(*size);
-        draw_text_mut(img, *color, position.0 as i32, position.1 as i32, scale, font, content)
+        let font = font.to_fontarc();
+        draw_text_mut(img, *color, position.0 as i32, position.1 as i32, scale, &font, content)
       },
       Layer::Image { scale, position, image } => {
         let (w, h) = image.dimensions();
@@ -87,5 +88,42 @@ impl Layer {
         overlay(img, &resized, position.0.into(), position.1.into());
       }
     }
+  }
+}
+
+macro_rules! load_font {
+  ($path:expr) => {{
+    let path = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), $path));
+    FontArc::try_from_slice(path).unwrap()
+  }};
+}
+
+#[derive(Clone, Copy)]
+pub enum Font {
+  DejaVuSans,
+  UbuntuRegular,
+  UbuntuBold,
+  RobotoRegular,
+  RobotoBold,
+  /// Load your own font of choice
+  Custom(&'static str)
+}
+
+impl Font {
+  pub fn to_fontarc(self) -> FontArc {
+    match self {
+      Font::DejaVuSans => load_font!("/fonts/DejaVuSans.ttf"),
+      Font::UbuntuRegular => load_font!("/fonts/ubuntu/Ubuntu-Regular.ttf"),
+      Font::UbuntuBold => load_font!("/fonts/ubuntu/Ubuntu-Bold.ttf"),
+      Font::RobotoRegular => load_font!("/fonts/roboto/Roboto-Regular.ttf"),
+      Font::RobotoBold => load_font!("/fonts/roboto/Roboto-Bold.ttf"),
+      Font::Custom(p) => Self::from_path(p)
+    }
+  }
+
+  fn from_path(path: &str) -> FontArc {
+    let font = std::fs::read(path).unwrap_or_else(|_| panic!("(Asahi) failed to load font from given path at {path}"));
+
+    FontArc::try_from_vec(font).unwrap_or_else(|_| panic!("(Asahi) failed to parse font from given path at {path}"))
   }
 }

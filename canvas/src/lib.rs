@@ -8,5 +8,8 @@ pub use {
     ImageFormat,
     to_rgba
   },
-  layer::Layer
+  layer::{
+    Font,
+    Layer
+  }
 };

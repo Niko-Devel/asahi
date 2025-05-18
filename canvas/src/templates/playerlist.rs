@@ -5,7 +5,8 @@ use {
   },
   crate::{
     Canvas,
-    Layer
+    Layer,
+    layer::Font as LFont
   },
   ab_glyph::{
     Font,
@@ -31,7 +32,7 @@ pub struct Style {
   pub graph_color:      Rgba<u8>,
   pub text_color:       Rgba<u8>,
   pub admin_color:      Rgba<u8>,
-  pub font:             FontArc,
+  pub font:             LFont,
   pub font_size:        f32,
   pub row_height:       u32,
   pub padding:          u32
@@ -45,7 +46,7 @@ impl Default for Style {
       graph_color:      Rgba([201, 55, 93, 255]),
       text_color:       Rgba([255, 255, 255, 255]),
       admin_color:      Rgba([247, 67, 74, 255]),
-      font:             FontArc::try_from_slice(include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/fonts/DejaVuSans.ttf"))).unwrap(),
+      font:             LFont::UbuntuRegular,
       font_size:        24.0,
       row_height:       36,
       padding:          5
@@ -84,16 +85,16 @@ pub fn playerlist(
   });
 
   // header text
-  let content = if players.is_empty() { "Nobody's playing" } else { "Players online" };
+  let content = if players.is_empty() { "Nobody is playing" } else { "Players online" };
   let fsize = style.font_size + 8.0;
-  let text_width = assume_text_width(content, fsize, &style.font);
+  let text_width = assume_text_width(content, fsize, &style.font.to_fontarc());
   let text_x = (width / 2).saturating_sub(text_width / 2);
   canvas.add_layer(Layer::Text {
     size:     fsize,
     position: (text_x, 7),
     color:    style.text_color,
     content:  content.to_string(),
-    font:     style.font.clone()
+    font:     style.font
   });
 
   if !players.is_empty() {
@@ -117,7 +118,7 @@ pub fn playerlist(
         position: (50, y + 5),
         color:    admin_color,
         content:  format!("{}{} - {}", p.name, p.emoji, p.uptime),
-        font:     style.font.clone()
+        font:     style.font
       })
     }
   }
