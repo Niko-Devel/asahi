@@ -4,13 +4,14 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 repository.workspace = true
+rust-version.workspace = true
 license-file.workspace = true
 description = "Internal core crate for Asahi framework"
 
 [dependencies]
 bb8-redis = "0.23.0"
 thiserror = { workspace = true }
-sqlx = "0.8.5"
+sqlx = { workspace = true }
 serde_json = { workspace = true }
 
 [features]
