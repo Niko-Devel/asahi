@@ -19,7 +19,4 @@ pub use {
   logging::log_init
 };
 
-pub use {
-  tracing,
-  tracing_subscriber
-};
+pub use tracing;
