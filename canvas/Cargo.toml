@@ -12,5 +12,6 @@ description.workspace = true
 ab_glyph = "0.2.29"
 image = "0.25.6"
 imageproc = "0.25.0"
+asahi_utils = { workspace = true }
 
 [features]

@@ -6,13 +6,8 @@ use {
   crate::{
     Canvas,
     Layer,
+    canvas::assume_text_width,
     layer::Font as LFont
-  },
-  ab_glyph::{
-    Font,
-    FontArc,
-    PxScale,
-    ScaleFont
   },
   image::Rgba
 };
@@ -52,15 +47,6 @@ impl Default for Style {
       padding:          5
     }
   }
-}
-
-fn assume_text_width(
-  text: &str,
-  font_size: f32,
-  font: &FontArc
-) -> u32 {
-  let scaled = font.as_scaled(PxScale::from(font_size));
-  text.chars().map(|c| scaled.h_advance(scaled.glyph_id(c))).sum::<f32>().ceil() as u32
 }
 
 pub fn playerlist(

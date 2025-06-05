@@ -18,6 +18,7 @@ define_color_styles!(Red, "\x1b[31m");
 define_color_styles!(Blue, "\x1b[34m");
 define_color_styles!(Yellow, "\x1b[33m");
 define_color_styles!(Green, "\x1b[32m");
+define_color_styles!(Black, "\x1b[37m");
 
 mod styling {
   pub(crate) struct StyledColor<'a> {
