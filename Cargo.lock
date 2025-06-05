@@ -94,7 +94,7 @@ checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
 name = "asahi"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "asahi_canvas",
  "asahi_coordinator",
@@ -106,7 +106,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_canvas"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "ab_glyph",
  "asahi_utils",
@@ -116,7 +116,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_coordinator"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "asahi_internal",
  "async-trait",
@@ -125,7 +125,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_http"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "asahi_internal",
  "http-body-util",
@@ -136,7 +136,7 @@ dependencies = [
 
 [[package]]
 name = "asahi_internal"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "bb8-redis",
  "serde_json",
@@ -148,11 +148,11 @@ dependencies = [
 
 [[package]]
 name = "asahi_macros"
-version = "0.1.4"
+version = "0.1.5"
 
 [[package]]
 name = "asahi_utils"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "asahi_internal",
  "lazy_static",

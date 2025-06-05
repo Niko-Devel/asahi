@@ -26,7 +26,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.1.5"
 edition = "2024"
 authors = ["Nwerosama"]
 repository = "https://github.com/Niko-Devel/asahi"
@@ -36,7 +36,7 @@ description = "Workspace crate for Asahi framework"
 
 [workspace.dependencies]
 async-trait = "0.1.38"
-asahi_internal = { path = "internal", version = "0.1.4" }
+asahi_internal = { path = "internal", version = "0.1.5" }
 lazy_static = "1.5.0"
 regex = "1.11.1"
 serde_json = "1.0.140"
@@ -45,14 +45,14 @@ thiserror = "2.0.12"
 tokio = { version = "1.45.1", features = ["rt-multi-thread", "time", "net"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
-asahi_utils = { path = "utils", version = "0.1.4" }
+asahi_utils = { path = "utils", version = "0.1.5" }
 
 [dependencies]
-asahi_canvas = { path = "canvas", version = "0.1.4", optional = true }
-asahi_coordinator = { path = "coordinator", version = "0.1.4", optional = true }
-asahi_http = { path = "http", version = "0.1.4", optional = true }
+asahi_canvas = { path = "canvas", version = "0.1.5", optional = true }
+asahi_coordinator = { path = "coordinator", version = "0.1.5", optional = true }
+asahi_http = { path = "http", version = "0.1.5", optional = true }
 asahi_internal = { workspace = true }
-asahi_macros = { path = "macros", version = "0.1.4" }
+asahi_macros = { path = "macros", version = "0.1.5" }
 asahi_utils = { workspace = true, optional = true }
 
 [features]
