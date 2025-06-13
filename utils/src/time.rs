@@ -68,46 +68,53 @@ impl ProtoDuration {
     self
       .nanoseconds
       .to_u64()
-      .ok_or_else(|| AsahiError::Parse("duration too large".to_string()))
+      .ok_or_else(|| AsahiError::Parse("duration too large".to_string().into()))
       .map(Duration::from_nanos)
   }
 }
 
 pub fn parse_duration(input: &str) -> Result<Duration, AsahiError> {
   if let Some(int) = NUMBER_RE.captures(input) {
-    let value = BigInt::parse_bytes(int.get(1).unwrap().as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid number".to_string()))?;
+    let value =
+      BigInt::parse_bytes(int.get(1).unwrap().as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid number".to_string().into()))?;
     return value
       .to_u64()
-      .ok_or_else(|| AsahiError::Parse("number too large".to_string()))
+      .ok_or_else(|| AsahiError::Parse("number too large".to_string().into()))
       .map(Duration::from_secs);
   }
 
   if !DURATION_RE.is_match(input) {
-    return Err(AsahiError::Parse("no value or unit found".to_string()));
+    return Err(AsahiError::Parse("no value or unit found".to_string().into()));
   }
 
   let mut duration = ProtoDuration::default();
 
   for cap in DURATION_RE.captures_iter(input) {
-    let unit = cap.name("unit").ok_or_else(|| AsahiError::Parse("missing unit".to_string()))?.as_str();
+    let unit = cap
+      .name("unit")
+      .ok_or_else(|| AsahiError::Parse("missing unit".to_string().into()))?
+      .as_str();
 
     let multiplier = *UNIT_MAP
       .get(unit.to_lowercase().as_str())
-      .ok_or_else(|| AsahiError::Parse(format!("unknown unit: {unit}")))?;
+      .ok_or_else(|| AsahiError::Parse(format!("unknown unit: {unit}").into()))?;
 
-    let base = cap.name("int").ok_or_else(|| AsahiError::Parse("missing number".to_string()))?;
-    let int = BigInt::parse_bytes(base.as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid integer".to_string()))?;
+    let base = cap.name("int").ok_or_else(|| AsahiError::Parse("missing number".to_string().into()))?;
+    let int = BigInt::parse_bytes(base.as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid integer".to_string().into()))?;
 
     let mut total = int * BigInt::from(multiplier);
 
     if let Some(dec) = cap.name("dec") {
-      let dec = BigInt::parse_bytes(dec.as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid decimal".to_string()))?;
+      let dec = BigInt::parse_bytes(dec.as_str().as_bytes(), 10).ok_or_else(|| AsahiError::Parse("invalid decimal".to_string().into()))?;
       let scale = BigInt::from(10).pow(dec.to_string().len() as u32);
       total += dec * BigInt::from(multiplier) / scale;
     }
 
     if let Some(exp) = cap.name("exp") {
-      let exp: isize = exp.as_str().parse().map_err(|_| AsahiError::Parse("invalid exponent".to_string()))?;
+      let exp: isize = exp
+        .as_str()
+        .parse()
+        .map_err(|_| AsahiError::Parse("invalid exponent".to_string().into()))?;
       let factor = BigInt::from(10).pow(exp.unsigned_abs() as u32);
       total = if exp < 0 { total / factor } else { total * factor };
     }

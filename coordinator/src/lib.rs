@@ -41,8 +41,7 @@ pub fn spawn<T, C>(
     loop {
       interval.tick().await;
       if let Err(e) = task.main_loop(Arc::clone(&ctx)).await {
-        let err = AsahiError::Worker(format!("[{name}] {e}"));
-        let _ = err;
+        let _ = AsahiError::Worker(format!("[{name}] {e}").into());
       }
     }
   });

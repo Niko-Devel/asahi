@@ -27,7 +27,7 @@ impl AsahiHttpBuilder {
   pub fn get(uri: &str) -> AsahiResult<Self> {
     let uri: Uri = uri
       .parse()
-      .map_err(|e| AsahiError::Network(format!("asahi_http_builder: invalid uri: {e}")))?;
+      .map_err(|e| AsahiError::Network(format!("asahi_http_builder: invalid uri: {e}").into()))?;
     Ok(Self {
       method: Method::GET,
       uri,
