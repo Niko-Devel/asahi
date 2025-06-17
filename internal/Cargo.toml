@@ -10,7 +10,7 @@ description = "Internal core crate for Asahi framework"
 
 [dependencies]
 bb8-redis = "0.24.0"
-hyper = { version = "1.6.0", features = ["http1"] }
+hyper = { workspace = true }
 thiserror = { workspace = true }
 sqlx = { workspace = true }
 serde-xml-rs = "0.8.1"

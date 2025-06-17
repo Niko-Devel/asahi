@@ -36,6 +36,7 @@ description = "Workspace crate for Asahi framework"
 
 [workspace.dependencies]
 async-trait = "0.1.38"
+asahi_utils = { path = "utils", version = "0.1.5" }
 asahi_internal = { path = "internal", version = "0.1.5" }
 lazy_static = "1.5.0"
 regex = "1.11.1"
@@ -45,7 +46,7 @@ thiserror = "2.0.12"
 tokio = { version = "1.45.1", features = ["rt-multi-thread", "time", "net"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
-asahi_utils = { path = "utils", version = "0.1.5" }
+hyper = { version = "1.6.0", features = ["client", "http1"] }
 
 [dependencies]
 asahi_canvas = { path = "canvas", version = "0.1.5", optional = true }
