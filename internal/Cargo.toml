@@ -9,7 +9,7 @@ license-file.workspace = true
 description = "Internal core crate for Asahi framework"
 
 [dependencies]
-bb8-redis = "0.23.0"
+bb8-redis = "0.24.0"
 hyper = { version = "1.6.0", features = ["http1"] }
 thiserror = { workspace = true }
 sqlx = { workspace = true }
