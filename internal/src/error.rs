@@ -39,6 +39,18 @@ pub enum AsahiError {
   Unknown
 }
 
+impl AsahiError {
+  pub fn from_error<E>(
+    error: E,
+    variant: impl Fn(Cow<'static, str>) -> AsahiError
+  ) -> Self
+  where
+    E: std::error::Error + Send + Sync + 'static
+  {
+    variant(Cow::Owned(error.to_string()))
+  }
+}
+
 macro_rules! impl_from_error {
   ($($source_type:ty => $destination_variant:ident),* $(,)?) => {
     $(
