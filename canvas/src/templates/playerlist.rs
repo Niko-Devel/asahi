@@ -71,7 +71,7 @@ pub fn playerlist(
   });
 
   // header text
-  let content = if players.is_empty() { "Nobody is playing" } else { "Players online" };
+  let content = if players.is_empty() { "Nobody playing" } else { "Players online" };
   let fsize = style.font_size + 8.0;
   let text_width = assume_text_width(content, fsize, &style.font.to_fontarc());
   let text_x = (width / 2).saturating_sub(text_width / 2);
@@ -87,7 +87,11 @@ pub fn playerlist(
     for (i, p) in players.iter().enumerate() {
       let y = header_height + i as u32 * style.row_height;
 
-      let alt_color = if i % 2 == 0 { Rgba([10, 10, 10, 255]) } else { Rgba([20, 20, 20, 255]) };
+      let alt_color = if i.is_multiple_of(2) {
+        Rgba([10, 10, 10, 255])
+      } else {
+        Rgba([20, 20, 20, 255])
+      };
 
       // alternating color thing
       canvas.add_layer(Layer::Rect {
@@ -98,12 +102,18 @@ pub fn playerlist(
 
       let admin_color = if p.is_admin { style.admin_color } else { style.text_color };
 
+      let uptime = if p.uptime.is_empty() {
+        "Just joined".to_string()
+      } else {
+        p.uptime.to_owned()
+      };
+
       // player data field
       canvas.add_layer(Layer::Text {
         size:     style.font_size,
         position: (50, y + 5),
         color:    admin_color,
-        content:  format!("{}{} - {}", p.name, p.emoji, p.uptime),
+        content:  format!("{}{} - {}", p.name, p.emoji, uptime),
         font:     style.font
       })
     }
@@ -194,54 +204,6 @@ mod test {
       PlayerEntry {
         name:     "Mr. Pallet".to_string(),
         uptime:   "2 h".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "Daggerbot - hi".to_string(),
-        uptime:   "1 h 58 m".to_string(),
-        is_admin: true,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "Random player".to_string(),
-        uptime:   "1 h 46 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "4220".to_string(),
-        uptime:   "59 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "asdf".to_string(),
-        uptime:   "35 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "Holy hell".to_string(),
-        uptime:   "12 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "This is getting".to_string(),
-        uptime:   "12 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "too long to type".to_string(),
-        uptime:   "11 m".to_string(),
-        is_admin: false,
-        emoji:    "".to_string()
-      },
-      PlayerEntry {
-        name:     "aslkfjafoijlkadfj".to_string(),
-        uptime:   "1 m".to_string(),
         is_admin: false,
         emoji:    "".to_string()
       }

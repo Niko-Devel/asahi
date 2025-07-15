@@ -8,7 +8,5 @@ rust-version.workspace = true
 license-file.workspace = true
 description.workspace = true
 
-[dependencies]
-
 [lib]
 proc-macro = true

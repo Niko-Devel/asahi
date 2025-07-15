@@ -1,6 +1,3 @@
-pub mod ansi;
-pub mod os;
-
 /// Formats timestamp integer to Discord's timestamp format
 pub fn format_timestamp(timestamp: i64) -> String { format!("<t:{timestamp}>\n<t:{timestamp}:R>") }
 
@@ -21,4 +18,22 @@ pub fn format_duration(secs: u64) -> String {
     .collect();
 
   formatted_string.join(", ")
+}
+
+/// Formats the bytes into human-readable string, e.g '7.75 GB'<br>
+/// Measured in binary, not decimal
+pub fn format_bytes(bytes: u64) -> String {
+  let units = ["B", "KB", "MB", "GB"];
+  let mut bytes = bytes as f64;
+  let mut unit = units[0];
+
+  for &u in &units {
+    if bytes < 1024.0 {
+      unit = u;
+      break;
+    }
+    bytes /= 1024.0;
+  }
+
+  format!("{bytes:.2} {unit}")
 }

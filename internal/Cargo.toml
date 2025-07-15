@@ -9,12 +9,12 @@ license-file.workspace = true
 description = "Internal core crate for Asahi framework"
 
 [dependencies]
-bb8-redis = "0.24.0"
+bb8-redis = { workspace = true }
 hyper = { workspace = true }
-thiserror = { workspace = true }
-sqlx = { workspace = true }
-serde-xml-rs = "0.8.1"
+serde-xml-rs = { workspace = true }
 serde_json = { workspace = true }
+sqlx = { workspace = true }
+thiserror = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 

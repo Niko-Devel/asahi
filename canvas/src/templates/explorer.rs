@@ -7,7 +7,7 @@ use {
     },
     to_rgba
   },
-  asahi_utils::os::format_bytes,
+  asahi_utils::format_bytes,
   image::Rgba,
   std::fmt
 };
