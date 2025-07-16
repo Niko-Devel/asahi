@@ -3,46 +3,37 @@ use {
     AsahiError,
     AsahiResult
   },
-  std::{
-    sync::Arc,
-    time::Duration
-  },
-  tokio::time::interval
+  std::time::Duration,
+  tokio::{
+    task::JoinHandle,
+    time::interval
+  }
 };
 
 pub use async_trait::async_trait;
 
 #[async_trait]
-pub trait AsahiCoordinator<C: Send + Sync>: Send + Sync {
+pub trait AsahiCoordinator: Send + Sync {
   fn name(&self) -> &'static str;
   /// Loop every X seconds
   fn interval(&self) -> u64;
   /// Asynchronous code inside the loop
-  async fn main_loop(
-    &self,
-    ctx: Arc<C>
-  ) -> AsahiResult<()>;
+  async fn main_loop(&self) -> AsahiResult<()>;
 }
 
 /// Spawn and run the logic in background on a timer
-pub fn spawn<T, C>(
-  task: T,
-  ctx: Arc<C>
-) where
-  T: AsahiCoordinator<C> + 'static,
-  C: Send + Sync + 'static
+pub fn spawn<T>(task: T) -> JoinHandle<()>
+where
+  T: AsahiCoordinator + 'static
 {
-  let name = task.name().to_string();
-  let int = task.interval();
-
   tokio::spawn(async move {
-    let mut interval = interval(Duration::from_secs(int));
+    let mut interval = interval(Duration::from_secs(task.interval()));
 
     loop {
       interval.tick().await;
-      if let Err(e) = task.main_loop(Arc::clone(&ctx)).await {
-        let _ = AsahiError::Worker(format!("[{name}] {e}").into());
+      if let Err(e) = task.main_loop().await {
+        let _ = AsahiError::Worker(format!("[{}] {e}", task.name()).into());
       }
     }
-  });
+  })
 }
