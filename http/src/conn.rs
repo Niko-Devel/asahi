@@ -1,6 +1,3 @@
-#[cfg(feature = "config")]
-use asahi_internal::AsahiConfigurable;
-
 use {
   super::tokiort::TokioIo,
   asahi_internal::{
@@ -23,13 +20,6 @@ use {
     time
   }
 };
-
-#[cfg(feature = "config")]
-pub trait AsahiHttpConfiguration: AsahiConfigurable {
-  fn url(&self) -> Uri;
-  /// Connection timeout interval in seconds
-  fn connect_timeout(&self) -> u64;
-}
 
 pub struct AsahiHttpConnection {
   sender: http1::SendRequest<Empty<Bytes>>
@@ -63,15 +53,6 @@ impl AsahiHttpConnection {
     });
 
     Ok(Self { sender })
-  }
-
-  #[cfg(feature = "config")]
-  pub async fn handshake_with_config<C>(config: C) -> AsahiResult<Self>
-  where
-    C: AsahiHttpConfiguration
-  {
-    let (url, connect_timeout) = { (config.url(), config.connect_timeout()) };
-    Self::handshake(url, connect_timeout).await
   }
 
   pub async fn send(

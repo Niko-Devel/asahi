@@ -17,4 +17,3 @@ tokio = { workspace = true }
 
 [features]
 default = []
-config = ["asahi_internal/config"]

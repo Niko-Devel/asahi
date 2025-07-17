@@ -20,4 +20,3 @@ tracing-subscriber = { workspace = true }
 
 [features]
 default = []
-config = []

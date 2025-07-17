@@ -6,7 +6,7 @@ authors.workspace = true
 readme = "README.md"
 repository.workspace = true
 license-file.workspace = true
-description = "Modular and customizable framework for Discord bots and side projects"
+description = "Modular and customizable toolkit for Discord bots and side projects"
 exclude = ["rust-toolchain", "*.toml", ".gitignore", ".vscode", ".github"]
 
 [workspace]
@@ -19,10 +19,10 @@ authors = ["Nwerosama"]
 repository = "https://github.com/Niko-Devel/asahi"
 rust-version = "1.88"
 license-file = "LICENSE"
-description = "Workspace crate for Asahi framework"
+description = "Workspace crate for Asahi toolkit"
 
 [workspace.dependencies]
-ab_glyph = "0.2.30"
+ab_glyph = "0.2.31"
 asahi_internal = { path = "internal", version = "0.1.6" }
 asahi_utils = { path = "utils", version = "0.1.6" }
 async-trait = "0.1.38"
@@ -56,7 +56,6 @@ asahi_utils = { workspace = true, optional = true }
 
 [features]
 default = ["utils"]
-config = ["asahi_internal/config"]
 
 canvas = ["dep:asahi_canvas"]
 coordinator = ["dep:asahi_coordinator"]

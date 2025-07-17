@@ -4,19 +4,9 @@ pub type AsahiResult<T> = Result<T, AsahiError>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum AsahiError {
-  #[cfg(feature = "config")]
-  #[error("(Asahi) Configuration error: {0}")]
-  /// User's configuration causes a fatal error
-  Config(Cow<'static, str>),
-
   #[error("(Asahi) Network error: {0}")]
   /// Network related errors such as reqwest, hyper, etc
   Network(Cow<'static, str>),
-
-  #[cfg(feature = "config")]
-  #[error("(Asahi) Extension error: {0}")]
-  /// Extension error caused by user's code
-  Extension(Cow<'static, str>),
 
   #[error("(Asahi) Worker error: {0}")]
   /// Coordinator's worker encounters an error
