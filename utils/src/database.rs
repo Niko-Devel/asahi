@@ -1,9 +1,15 @@
+#[cfg(all(feature = "sqlx-pg", feature = "sqlx-sqlite"))]
+compile_error!("You cannot enable both `sqlx-pg` and `sqlx-sqlite` features at the same time!");
+
 pub trait AsahiDatabaseConfig: Send + Sync {
   /// Returns database connection string
   fn uri(&self) -> &str;
 
   /// Returns the SQLx-compatible database kind, e.g PostgreSQL, SQLite, etc..
   fn kind(&self) -> AsahiDatabaseKind;
+
+  /// Maximum number of connections the pool should maintain
+  fn max_connections(&self) -> u32;
 }
 
 /// Supported database types
@@ -13,30 +19,30 @@ pub enum AsahiDatabaseKind {
   Sqlite
 }
 
-#[cfg(feature = "sqlx-pg")]
-pub async fn connect_pg<C>(config: &C) -> asahi::AsahiResult<sqlx::PgPool>
-where
-  C: AsahiDatabaseConfig
-{
-  if config.kind() != AsahiDatabaseKind::Postgres {
-    return Err(asahi::AsahiError::Config("asahi_utils: this is not a postgresql config".to_string()));
-  }
+macro_rules! impl_connect {
+  ($feature:literal, $fn_name:ident, $kind:ident, $pool:ty, $options:ty) => {
+    #[cfg(feature = $feature)]
+    pub async fn $fn_name<C>(config: &C) -> asahi_internal::AsahiResult<$pool>
+    where
+      C: AsahiDatabaseConfig
+    {
+      if config.kind() != AsahiDatabaseKind::$kind {
+        return Err(asahi_internal::AsahiError::Config(
+          concat!("asahi_utils: this is not a ", stringify!($kind), " config").into()
+        ));
+      }
 
-  sqlx::PgPool::connect(config.uri())
-    .await
-    .map_err(|e| asahi::AsahiError::Network(format!("asahi_utils: sqlx connection error: {e}")))
+      <$options>::new()
+        .max_connections(config.max_connections())
+        .max_lifetime(Some(std::time::Duration::from_secs(600))) // 10min
+        .idle_timeout(Some(std::time::Duration::from_secs(360))) // 6min
+        .connect(config.uri())
+        .await
+        .map_err(|e| asahi_internal::AsahiError::Network(format!("asahi_utils: sqlx connection error: {e}").into()))
+    }
+  };
 }
 
-#[cfg(feature = "sqlx-sqlite")]
-pub async fn connect_sqlite<C>(config: &C) -> asahi::AsahiResult<sqlx::SqlitePool>
-where
-  C: AsahiDatabaseConfig
-{
-  if config.kind() != AsahiDatabaseKind::Sqlite {
-    return Err(asahi::AsahiError::Config("asahi_utils: this is not a sqlite config".to_string()));
-  }
+impl_connect!("sqlx-pg", connect, Postgres, sqlx::PgPool, sqlx::postgres::PgPoolOptions);
 
-  sqlx::SqlitePool::connect(config.uri())
-    .await
-    .map_err(|e| asahi::AsahiError::Network(format!("asahi_utils: sqlx connection error: {e}")))
-}
+impl_connect!("sqlx-sqlite", connect, Sqlite, sqlx::SqlitePool, sqlx::sqlite::SqlitePoolOptions);

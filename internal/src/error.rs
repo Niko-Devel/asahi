@@ -4,6 +4,10 @@ pub type AsahiResult<T> = Result<T, AsahiError>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum AsahiError {
+  #[error("(Asahi) Configuration error: {0}")]
+  /// Config error that stems from invalid configuration setup and etc
+  Config(Cow<'static, str>),
+
   #[error("(Asahi) Network error: {0}")]
   /// Network related errors such as reqwest, hyper, etc
   Network(Cow<'static, str>),
@@ -29,18 +33,6 @@ pub enum AsahiError {
   Unknown
 }
 
-impl AsahiError {
-  pub fn from_error<E>(
-    error: E,
-    variant: impl Fn(Cow<'static, str>) -> AsahiError
-  ) -> Self
-  where
-    E: std::error::Error + Send + Sync + 'static
-  {
-    variant(Cow::Owned(error.to_string()))
-  }
-}
-
 macro_rules! impl_from_error {
   ($($source_type:ty => $destination_variant:ident),* $(,)?) => {
     $(
@@ -60,5 +52,6 @@ impl_from_error!(
   serde_xml_rs::Error => Parse,
   sqlx::Error => Database,
   bb8_redis::redis::RedisError => Database,
-  hyper::Error => Network
+  hyper::Error => Network,
+  reqwest::Error => Network
 );
