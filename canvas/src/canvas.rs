@@ -18,8 +18,16 @@ use {
       webp::WebPEncoder
     }
   },
-  std::io::Cursor
+  lazy_static::lazy_static,
+  regex::Regex,
+  reqwest::Client,
+  std::io::Cursor,
+  unicode_segmentation::UnicodeSegmentation
 };
+
+lazy_static! {
+  static ref DISCORD_EMOTE_REGEX: Regex = Regex::new(r"<a?:\w+:(\d+)>").expect("regex pattern failed");
+}
 
 #[derive(Default, Debug, Clone, Copy)]
 pub enum ImageFormat {
@@ -28,6 +36,12 @@ pub enum ImageFormat {
   Jpeg {
     quality: u8
   }
+}
+
+#[derive(Clone, PartialEq, Eq, Hash)]
+pub enum EmoteSource {
+  Discord(String),
+  Unicode(char)
 }
 
 pub struct Canvas {
@@ -116,4 +130,61 @@ pub(crate) fn assume_text_width(
 ) -> u32 {
   let scaled = font.as_scaled(PxScale::from(font_size));
   text.chars().map(|c| scaled.h_advance(scaled.glyph_id(c))).sum::<f32>().ceil() as u32
+}
+
+pub fn parse_all_emotes(s: &str) -> Vec<EmoteSource> {
+  let mut out = Vec::new();
+  let mut remaining = s;
+
+  while !remaining.is_empty() {
+    if let Some(mat) = DISCORD_EMOTE_REGEX.find(remaining) {
+      for ch in remaining[..mat.start()].graphemes(true) {
+        if ch.chars().next().unwrap().len_utf8() >= 3 {
+          out.push(EmoteSource::Unicode(ch.chars().next().unwrap()));
+          if out.len() == 3 {
+            return out;
+          }
+        }
+      }
+
+      let caps = DISCORD_EMOTE_REGEX.captures(mat.as_str()).unwrap();
+      let id = caps.get(1).unwrap().as_str().to_string();
+      out.push(EmoteSource::Discord(id));
+      if out.len() == 3 {
+        return out;
+      }
+
+      remaining = &remaining[mat.end()..];
+    } else {
+      for ch in remaining.graphemes(true) {
+        if ch.chars().next().unwrap().len_utf8() >= 3 {
+          out.push(EmoteSource::Unicode(ch.chars().next().unwrap()));
+          if out.len() == 3 {
+            return out;
+          }
+        }
+      }
+      break;
+    }
+  }
+
+  out
+}
+
+async fn reqwest_img(url: &str) -> Option<DynamicImage> {
+  let http = Client::new();
+  let resp = http.get(url).send().await.ok()?.bytes().await.ok()?;
+  image::load_from_memory(&resp).ok()
+}
+
+pub(crate) async fn fetch_discord_emote(id: &str) -> Option<DynamicImage> {
+  let url = format!("https://cdn.discordapp.com/emojis/{id}.webp?size=96");
+  reqwest_img(&url).await
+}
+
+pub(crate) async fn fetch_twemoji_emote(c: char) -> Option<DynamicImage> {
+  let cpt = format!("{:x}", c as u32);
+  let version = "16.0.1";
+  let url = format!("https://cdnjs.cloudflare.com/ajax/libs/twemoji/{version}/72x72/{cpt}.png");
+  reqwest_img(&url).await
 }
