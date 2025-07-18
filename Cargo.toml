@@ -37,6 +37,7 @@ num-traits = "0.2.19"
 pin-project-lite = "0.2.16"
 regex = "1.11.1"
 reqwest = { version = "0.12.22", features = [ "native-tls-vendored" ] }
+serde = { version = "1.0.219", features = ["derive"] }
 serde-xml-rs = "0.8.1"
 serde_json = "1.0.141"
 sqlx = { version = "0.8.6", features = ["runtime-tokio"] }
@@ -47,6 +48,7 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 unicode-segmentation = "1.12.0"
 uptime_lib = "0.3.1"
+warp = { version = "0.3.7" }
 
 [dependencies]
 asahi_canvas = { path = "canvas", version = "0.1.6", optional = true }
@@ -58,6 +60,8 @@ asahi_utils = { workspace = true, optional = true }
 
 [features]
 default = ["utils"]
+prober = ["asahi_internal/prober"]
+
 sqlx-pg = ["asahi_utils/sqlx-pg"]
 sqlx-sqlite = ["asahi_utils/sqlx-sqlite"]
 
