@@ -20,9 +20,9 @@ pub enum AsahiDatabaseKind {
 }
 
 macro_rules! impl_connect {
-  ($feature:literal, $fn_name:ident, $kind:ident, $pool:ty, $options:ty) => {
+  ($feature:literal, $kind:ident, $pool:ty, $options:ty) => {
     #[cfg(feature = $feature)]
-    pub async fn $fn_name<C>(config: &C) -> asahi_internal::AsahiResult<$pool>
+    pub async fn connect<C>(config: &C) -> asahi_internal::AsahiResult<$pool>
     where
       C: AsahiDatabaseConfig
     {
@@ -43,6 +43,6 @@ macro_rules! impl_connect {
   };
 }
 
-impl_connect!("sqlx-pg", connect, Postgres, sqlx::PgPool, sqlx::postgres::PgPoolOptions);
+impl_connect!("sqlx-pg", Postgres, sqlx::PgPool, sqlx::postgres::PgPoolOptions);
 
-impl_connect!("sqlx-sqlite", connect, Sqlite, sqlx::SqlitePool, sqlx::sqlite::SqlitePoolOptions);
+impl_connect!("sqlx-sqlite", Sqlite, sqlx::SqlitePool, sqlx::sqlite::SqlitePoolOptions);
