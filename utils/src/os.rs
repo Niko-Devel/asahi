@@ -40,6 +40,13 @@ fn system_() -> System {
   system
 }
 
+/// Fetches the processor's name, e.g 'Cortex-A76'
+pub fn get_cpu_info() -> String {
+  let sys = system_();
+  let cpu = sys.cpus().first().expect("No processor data");
+  cpu.brand().to_string()
+}
+
 /// Fetches the OS info, e.g 'AlmaLinux 10.0'
 pub fn get_os_info() -> String {
   let path = Path::new("/etc/os-release");
