@@ -1,8 +1,3 @@
-#[cfg(feature = "http")]
-pub mod http {
-  pub use asahi_http as http;
-}
-
 #[cfg(feature = "coordinator")]
 pub use asahi_coordinator::{
   AsahiCoordinator,
