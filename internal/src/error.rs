@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-pub type AsahiResult<T> = Result<T, AsahiError>;
+pub type AsahiResult<T = ()> = Result<T, AsahiError>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum AsahiError {
