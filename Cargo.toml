@@ -25,7 +25,7 @@ description = "Workspace crate for Asahi toolkit"
 ab_glyph = "0.2.31"
 asahi_internal = { path = "internal", version = "=0.1.7" }
 asahi_utils = { path = "utils", version = "=0.1.7" }
-async-trait = "0.1.38"
+async-trait = "0.1.89"
 bb8-redis = "0.24.0"
 http-body-util = "0.1.3"
 hyper = { version = "1.6.0", features = ["client", "http1"] }
@@ -36,19 +36,19 @@ num-bigint = "0.4.6"
 num-traits = "0.2.19"
 pin-project-lite = "0.2.16"
 regex = "1.11.1"
-reqwest = { version = "0.12.22", features = [ "native-tls-vendored" ] }
+reqwest = { version = "0.12.23", features = [ "native-tls-vendored" ] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde-xml-rs = "0.8.1"
-serde_json = "1.0.141"
+serde_json = "1.0.142"
 sqlx = { version = "0.8.6", features = ["runtime-tokio"] }
-sysinfo = "0.36.1"
-thiserror = "2.0.12"
-tokio = { version = "1.47.0", features = ["rt-multi-thread", "time", "net"] }
+sysinfo = "0.37.0"
+thiserror = "2.0.14"
+tokio = { version = "1.47.1", features = ["rt-multi-thread", "time", "net"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 unicode-segmentation = "1.12.0"
 uptime_lib = "0.3.1"
-warp = { version = "0.3.7" }
+warp = "0.4.1"
 
 [dependencies]
 asahi_canvas = { path = "canvas", version = "=0.1.7", optional = true }
