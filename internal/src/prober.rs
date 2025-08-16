@@ -4,7 +4,11 @@ use {
     Serialize
   },
   std::sync::Arc,
-  tokio::sync::RwLock,
+  tokio::{
+    runtime::Handle,
+    sync::RwLock,
+    task::spawn_blocking
+  },
   warp::{
     Filter,
     Rejection,
@@ -54,6 +58,21 @@ impl Probe {
     health.status = if connected { "Healthy".to_string() } else { "Unhealthy".to_string() }
   }
 
+  /// Spawns the probe server in a separate blocking thread
+  pub fn spawn_server(
+    &self,
+    port: u16
+  ) {
+    let probe = self.clone();
+    spawn_blocking(move || {
+      let rt = Handle::current();
+      rt.block_on(async move {
+        crate::info!("Health API online @ port {port} - Probe the app via /ready & /health");
+        probe.init(port).await;
+      });
+    });
+  }
+
   /// Initializes the webserver for Kubernetes to consume for health probing
   pub async fn init(
     &self,
@@ -65,14 +84,16 @@ impl Probe {
     let health = warp::path("health").and(warp::get()).and_then(move || {
       let prober = health_prober.clone();
       async move {
-        let status = prober.health.read().await;
-        let status_code = if status.connected {
-          StatusCode::NO_CONTENT
-        } else {
-          StatusCode::SERVICE_UNAVAILABLE
-        };
+        let status = prober.health.read().await.connected;
 
-        Ok::<_, Rejection>(with_status(json(&*status), status_code))
+        Ok::<_, Rejection>(with_status(
+          json(&status),
+          if status {
+            StatusCode::NO_CONTENT
+          } else {
+            StatusCode::SERVICE_UNAVAILABLE
+          }
+        ))
       }
     });
 
@@ -80,11 +101,15 @@ impl Probe {
       let prober = readiness_prober.clone();
       async move {
         let status = prober.health.read().await;
-        if status.connected {
-          Ok::<_, Rejection>(with_status("Ready", StatusCode::OK))
-        } else {
-          Ok::<_, Rejection>(with_status("Not Ready", StatusCode::SERVICE_UNAVAILABLE))
-        }
+        let msg = if status.connected { "Ready" } else { "Not Ready" };
+        Ok::<_, Rejection>(with_status(
+          json(&msg),
+          if status.connected {
+            StatusCode::OK
+          } else {
+            StatusCode::SERVICE_UNAVAILABLE
+          }
+        ))
       }
     });
 
