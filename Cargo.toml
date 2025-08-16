@@ -48,7 +48,7 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 unicode-segmentation = "1.12.0"
 uptime_lib = "0.3.1"
-warp = "0.4.1"
+warp = { version = "0.4.1", features = ["server"] }
 
 [dependencies]
 asahi_canvas = { path = "canvas", version = "=0.1.8", optional = true }
@@ -56,6 +56,7 @@ asahi_coordinator = { path = "coordinator", version = "=0.1.8", optional = true 
 asahi_internal = { workspace = true }
 asahi_macros = { path = "macros", version = "=0.1.8" }
 asahi_utils = { workspace = true, optional = true }
+warp = { workspace = true }
 
 [features]
 default = ["utils"]

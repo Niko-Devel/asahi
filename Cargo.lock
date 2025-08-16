@@ -104,6 +104,7 @@ dependencies = [
  "asahi_internal",
  "asahi_macros",
  "asahi_utils",
+ "warp",
 ]
 
 [[package]]
@@ -3294,6 +3295,7 @@ dependencies = [
  "http",
  "http-body-util",
  "hyper",
+ "hyper-util",
  "log",
  "mime",
  "mime_guess",
